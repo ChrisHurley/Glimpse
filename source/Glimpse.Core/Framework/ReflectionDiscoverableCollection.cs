@@ -198,15 +198,16 @@ namespace Glimpse.Core.Framework
         /// </summary>
         public void Discover()
         {
-            Logger.Debug("Discovering {0}'s in '{1}' and all sub directories.", typeof(T).Name, DiscoveryLocation);
+            Logger.Debug("Discovering {0}'s in current app domain.", typeof(T).Name, DiscoveryLocation);
 
             var results = new List<T>();
 
-            foreach (var file in Directory.GetFiles(DiscoveryLocation, "*.dll", SearchOption.AllDirectories))
+            //foreach (var file in Directory.GetFiles(DiscoveryLocation, "*.dll", SearchOption.AllDirectories))
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 try 
                 {
-                    Assembly assembly = Assembly.LoadFrom(file);
+                   //Assembly assembly = Assembly.LoadFrom(file);
                     Type[] allTypes;
 
                     // GetTypes potentially throws and exception. Defensive coding as per http://haacked.com/archive/2012/07/23/get-all-types-in-an-assembly.aspx
@@ -243,7 +244,7 @@ namespace Glimpse.Core.Framework
                 }
                 catch (Exception exception)
                 {
-                    Logger.Error(Resources.DiscoverLoadAssembly, exception, file);
+                    //Logger.Error(Resources.DiscoverLoadAssembly, exception, file);
                 }
             }
 
